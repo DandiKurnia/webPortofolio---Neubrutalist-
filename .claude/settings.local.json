@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(Start-Sleep *)",
+      "Bash(start *)",
+      "Bash(timeout 5 bash -c \"until curl -s http://localhost:3000 > /dev/null 2>&1; do sleep 0.5; done\")",
+      "Bash(git rm *)",
+      "Bash(docker-compose up *)",
+      "Bash(docker-compose ps *)"
+    ]
+  }
+}

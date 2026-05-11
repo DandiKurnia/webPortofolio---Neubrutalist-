@@ -64,8 +64,8 @@ export default function AdminSidebar() {
         </div>
         
         <div className="flex-1 overflow-y-auto space-y-4 px-2 hide-scrollbar">
-          <Link className={getLinkClass("/admin")} href="/admin" onClick={closeMenu}>
-            <span className="material-symbols-outlined" style={getIconStyle("/admin")}>
+          <Link className={getLinkClass("/admin/overview")} href="/admin/overview" onClick={closeMenu}>
+            <span className="material-symbols-outlined" style={getIconStyle("/admin/overview")}>
               dashboard
             </span>
             Overview
