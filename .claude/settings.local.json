@@ -22,7 +22,10 @@
       "Bash(npm uninstall *)",
       "Bash(docker-compose down *)",
       "Bash(docker network *)",
-      "Bash(ipconfig)"
+      "Bash(ipconfig)",
+      "Bash(curl -s http://localhost:3000/api/certifications)",
+      "PowerShell(Stop-Process *)",
+      "Bash(node *)"
     ]
   }
 }

@@ -15,6 +15,32 @@ async function main() {
   });
 
   console.log("Admin user created:", admin);
+
+  // Seed certifications
+  const certifications = await prisma.certification.createMany({
+    data: [
+      {
+        title: "Data Privacy Fundamentals",
+        company: "Google",
+        link: "https://www.coursera.org/account/accomplishments/verify/EXAMPLE1",
+        years: "2023",
+      },
+      {
+        title: "AWS Certified Solutions Architect",
+        company: "Amazon Web Services",
+        link: "https://aws.amazon.com/certification/",
+        years: "2024",
+      },
+      {
+        title: "Professional Scrum Master I",
+        company: "Scrum.org",
+        link: "https://www.scrum.org/certificates/",
+        years: "2023",
+      },
+    ],
+  });
+
+  console.log("Certifications created:", certifications);
 }
 
 main()

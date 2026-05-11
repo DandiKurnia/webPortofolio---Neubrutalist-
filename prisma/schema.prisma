@@ -17,3 +17,15 @@ model User {
 
   @@map("users")
 }
+
+model Certification {
+  id        String   @id @default(cuid())
+  title     String
+  company   String
+  link      String?
+  years     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("certifications")
+}
