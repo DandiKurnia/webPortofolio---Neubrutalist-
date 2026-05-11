@@ -7,7 +7,22 @@
       "Bash(timeout 5 bash -c \"until curl -s http://localhost:3000 > /dev/null 2>&1; do sleep 0.5; done\")",
       "Bash(git rm *)",
       "Bash(docker-compose up *)",
-      "Bash(docker-compose ps *)"
+      "Bash(docker-compose ps *)",
+      "Bash(npm install *)",
+      "Bash(npx prisma *)",
+      "Bash(docker-compose logs *)",
+      "Bash(docker exec webportofolio_db *)",
+      "Bash(npx tsx *)",
+      "Bash(curl -s http://localhost:3000/api/auth/providers)",
+      "Bash(timeout 3 bash -c \"until curl -s http://localhost:3000/api/auth/providers > /dev/null 2>&1; do sleep 0.5; done\")",
+      "Bash(timeout 5 bash -c \"until curl -s http://localhost:3000/api/auth/providers 2>&1 | grep -q 'credentials'; do sleep 1; done\")",
+      "Bash(curl -s http://localhost:3000/admin/login)",
+      "Bash(grep -v \"^$\")",
+      "Bash(docker-compose restart *)",
+      "Bash(npm uninstall *)",
+      "Bash(docker-compose down *)",
+      "Bash(docker network *)",
+      "Bash(ipconfig)"
     ]
   }
 }

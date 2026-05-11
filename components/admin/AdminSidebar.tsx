@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -91,9 +92,12 @@ export default function AdminSidebar() {
         </div>
         
         <div className="mt-auto pt-4 border-t-4 border-on-surface px-2">
-          <button 
+          <button
             className="w-full flex items-center justify-center gap-2 p-4 bg-tertiary-fixed text-on-surface border-4 border-on-surface brutal-shadow hover:translate-x-1 hover:translate-y-1 hover:brutal-shadow-sm active:translate-x-2 active:translate-y-2 active:shadow-none transition-all font-mono text-[14px] leading-[120%] font-bold uppercase"
-            onClick={closeMenu}
+            onClick={() => {
+              closeMenu();
+              signOut({ callbackUrl: "/admin/login" });
+            }}
           >
             <span className="material-symbols-outlined">logout</span>
             Logout

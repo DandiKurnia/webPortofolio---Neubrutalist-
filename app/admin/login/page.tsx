@@ -1,7 +1,44 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password");
+      } else {
+        const urlParams = new URLSearchParams(window.location.search);
+        const from = urlParams.get("from") || "/admin/overview";
+        router.push(from);
+        router.refresh();
+      }
+    } catch (error) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="bg-surface font-body text-on-surface brutalist-grid min-h-screen flex items-center justify-center p-4 md:p-16 relative overflow-hidden">
       <main className="w-full max-w-[500px] relative z-10">
@@ -18,7 +55,6 @@ export default function LoginPage() {
               System_Auth_v1.0
             </div>
             <div className="w-12"></div>
-            {/* Spacer to center title logic if needed */}
           </div>
           {/* Login Content Area */}
           <div className="p-2 md:p-6 flex flex-col gap-6">
@@ -30,7 +66,16 @@ export default function LoginPage() {
                 Enter your credentials to access the terminal.
               </p>
             </header>
-            <form className="flex flex-col gap-6">
+
+            {error && (
+              <div className="bg-error border-4 border-on-surface p-4 brutal-shadow-sm">
+                <p className="font-mono text-[14px] leading-[120%] font-bold text-on-error">
+                  {error}
+                </p>
+              </div>
+            )}
+
+            <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
               {/* Email Input */}
               <div className="flex flex-col gap-2">
                 <label
@@ -45,6 +90,10 @@ export default function LoginPage() {
                     id="email"
                     placeholder="name@domain.com"
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -62,6 +111,10 @@ export default function LoginPage() {
                     id="password"
                     placeholder="••••••••"
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -71,6 +124,7 @@ export default function LoginPage() {
                   <input
                     className="w-6 h-6 border-4 border-on-surface rounded-none checked:bg-primary appearance-none checked:border-on-surface transition-all cursor-pointer relative after:content-[''] after:hidden checked:after:block after:w-2 after:h-2 after:bg-on-surface after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2"
                     type="checkbox"
+                    disabled={isLoading}
                   />
                   <span className="font-mono text-[14px] leading-[120%] font-bold">
                     Remember_Me
@@ -85,11 +139,12 @@ export default function LoginPage() {
               </div>
               {/* Submit Button (Bright Pink) */}
               <button
-                className="w-full py-6 bg-tertiary text-on-tertiary border-[4px] border-on-surface shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-2 active:translate-y-2 active:shadow-none transition-all flex justify-center items-center gap-2"
-                type="button"
+                className="w-full py-6 bg-tertiary text-on-tertiary border-[4px] border-on-surface shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-2 active:translate-y-2 active:shadow-none transition-all flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                type="submit"
+                disabled={isLoading}
               >
                 <span className="font-headline text-[32px] leading-[110%] font-black">
-                  Sign In
+                  {isLoading ? "Signing In..." : "Sign In"}
                 </span>
                 <span
                   className="material-symbols-outlined font-black"
@@ -99,7 +154,6 @@ export default function LoginPage() {
                 </span>
               </button>
             </form>
-            {/* Footer Links */}
           </div>
         </div>
 
