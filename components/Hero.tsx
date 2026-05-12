@@ -85,7 +85,7 @@ function ContactWindow() {
         />
         <div className="text-center">
           <h3 className="font-headline text-base sm:text-lg md:text-xl lg:text-2xl font-black uppercase mb-1 md:mb-2">
-            Full Stack Developer &amp; UI/UX Design
+            Full Stack Web Developer &amp; System Administrator
           </h3>
           <a
             className="font-mono font-bold text-xs sm:text-sm md:text-base bg-neon-yellow px-3 md:px-4 py-1.5 md:py-2 brutal-border inline-block hover:bg-neon-blue hover:text-white transition-colors"
