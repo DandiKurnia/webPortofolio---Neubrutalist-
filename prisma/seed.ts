@@ -41,6 +41,34 @@ async function main() {
   });
 
   console.log("Certifications created:", certifications);
+
+  // Seed skills
+  const skills = await prisma.skill.createMany({
+    data: [
+      {
+        title: "React.js",
+        description: "Expert",
+        icon: "code",
+      },
+      {
+        title: "Tailwind CSS",
+        description: "Expert",
+        icon: "css",
+      },
+      {
+        title: "Next.js",
+        description: "Advanced",
+        icon: "terminal",
+      },
+      {
+        title: "TypeScript",
+        description: "Advanced",
+        icon: "deployed_code",
+      },
+    ],
+  });
+
+  console.log("Skills created:", skills);
 }
 
 main()

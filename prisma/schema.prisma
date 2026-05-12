@@ -29,3 +29,14 @@ model Certification {
 
   @@map("certifications")
 }
+
+model Skill {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String   @default("code")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("skills")
+}

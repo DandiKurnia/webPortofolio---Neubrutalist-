@@ -25,7 +25,12 @@
       "Bash(ipconfig)",
       "Bash(curl -s http://localhost:3000/api/certifications)",
       "PowerShell(Stop-Process *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(curl *)",
+      "PowerShell(Get-Process *)",
+      "Bash(lsof -ti:3000)",
+      "Bash(xargs kill -9)",
+      "PowerShell(Get-NetTCPConnection *)"
     ]
   }
 }

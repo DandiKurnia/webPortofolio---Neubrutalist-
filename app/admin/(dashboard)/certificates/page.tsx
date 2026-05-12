@@ -19,6 +19,8 @@ export default function AdminCertificatesPage() {
   const [currentCertification, setCurrentCertification] = useState<Certification | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // Form state
   const [formData, setFormData] = useState({
@@ -139,6 +141,28 @@ export default function AdminCertificatesPage() {
     cert.company.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredCertifications.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedCertifications = filteredCertifications.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
     <>
       <header className="mb-12">
@@ -209,17 +233,17 @@ export default function AdminCertificatesPage() {
                 </tr>
               </thead>
               <tbody>
-                {filteredCertifications.length === 0 ? (
+                {paginatedCertifications.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="p-6 text-center font-body text-on-surface-variant">
                       No certifications found
                     </td>
                   </tr>
                 ) : (
-                  filteredCertifications.map((cert, index) => (
+                  paginatedCertifications.map((cert, index) => (
                     <tr key={cert.id} className="border-b-4 border-on-surface hover:bg-surface-container transition-colors group">
                       <td className="p-6 border-r-4 border-on-surface font-mono font-bold text-on-surface-variant">
-                        #{String(index + 1).padStart(3, "0")}
+                        #{String(startIndex + index + 1).padStart(3, "0")}
                       </td>
                       <td className="p-6 border-r-4 border-on-surface font-body font-bold text-2xl text-on-surface uppercase">
                         {cert.title}
@@ -254,8 +278,39 @@ export default function AdminCertificatesPage() {
           {/* Pagination */}
           <div className="flex justify-between items-center mt-6 pt-4 border-t-4 border-on-surface">
             <span className="font-mono font-bold uppercase text-on-surface-variant">
-              Showing {filteredCertifications.length} of {certifications.length} Entries
+              Showing {startIndex + 1} to {Math.min(endIndex, filteredCertifications.length)} of {filteredCertifications.length} Entries
             </span>
+            <div className="flex gap-2">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="border-4 border-on-surface bg-surface p-2 brutal-shadow-sm hover:bg-primary-container active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span className="material-symbols-outlined">chevron_left</span>
+              </button>
+              <div className="flex gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`border-4 border-on-surface px-4 py-2 brutal-shadow-sm font-mono font-bold transition-all ${
+                      currentPage === page
+                        ? "bg-secondary text-on-secondary"
+                        : "bg-surface hover:bg-primary-container"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="border-4 border-on-surface bg-surface p-2 brutal-shadow-sm hover:bg-primary-container active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span className="material-symbols-outlined">chevron_right</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

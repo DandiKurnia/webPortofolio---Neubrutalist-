@@ -1,61 +1,25 @@
-const skills = [
-  {
-    icon: "code",
-    name: "React",
-    bg: "bg-white",
-    text: "text-pure-black",
-    rotate: "",
-  },
-  {
-    icon: "css",
-    name: "Tailwind",
-    bg: "bg-neon-blue",
-    text: "text-white",
-    rotate: "rotate-1",
-  },
-  {
-    icon: "terminal",
-    name: "Node.js",
-    bg: "bg-white",
-    text: "text-pure-black",
-    rotate: "-rotate-2",
-  },
-  {
-    icon: "design_services",
-    name: "Figma",
-    bg: "bg-neon-yellow",
-    text: "text-pure-black",
-    rotate: "",
-  },
-  {
-    icon: "database",
-    name: "MongoDB",
-    bg: "bg-white",
-    text: "text-pure-black",
-    rotate: "rotate-2",
-  },
-  {
-    icon: "api",
-    name: "GraphQL",
-    bg: "bg-pure-black",
-    text: "text-white",
-    rotate: "",
-  },
-  {
-    icon: "animation",
-    name: "Framer",
-    bg: "bg-white",
-    text: "text-pure-black",
-    rotate: "-rotate-1",
-  },
-  {
-    icon: "deployed_code",
-    name: "Docker",
-    bg: "bg-neon-pink",
-    text: "text-white",
-    rotate: "rotate-1",
-  },
+"use client";
+
+import { useEffect, useState } from "react";
+
+interface Skill {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+const bgOptions = [
+  "bg-white",
+  "bg-neon-blue",
+  "bg-neon-yellow",
+  "bg-pure-black",
+  "bg-neon-pink",
 ];
+
+const textOptions = ["text-pure-black", "text-white"];
+
+const rotateOptions = ["", "rotate-1", "-rotate-2", "rotate-2", "-rotate-1"];
 
 function SkillCard({
   icon,
@@ -85,6 +49,51 @@ function SkillCard({
 }
 
 export default function Skills() {
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await fetch("/api/skills");
+        if (response.ok) {
+          const data = await response.json();
+          setSkills(data);
+        }
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
+  const skillsWithStyles = skills.map((skill, index) => ({
+    ...skill,
+    bg: bgOptions[index % bgOptions.length],
+    text:
+      bgOptions[index % bgOptions.length] === "bg-pure-black" ||
+      bgOptions[index % bgOptions.length] === "bg-neon-blue" ||
+      bgOptions[index % bgOptions.length] === "bg-neon-pink"
+        ? "text-white"
+        : "text-pure-black",
+    rotate: rotateOptions[index % rotateOptions.length],
+  }));
+
+  if (isLoading) {
+    return (
+      <section
+        id="skills"
+        className="py-10 sm:py-14 md:py-18 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-16 bg-surface border-y-4 border-pure-black relative overflow-hidden"
+      >
+        <div className="flex items-center justify-center">
+          <p className="font-mono font-bold text-on-surface-variant">Loading skills...</p>
+        </div>
+      </section>
+    );
+  }
   return (
     <section
       id="skills"
@@ -113,95 +122,23 @@ export default function Skills() {
         {/* Mobile Text Marquee */}
         <div className="md:hidden bg-neon-yellow border-y-4 border-pure-black sm:-mx-6 px-4 sm:px-6 py-4 flex items-center relative overflow-hidden whitespace-nowrap mb-6 w-full">
           <div className="font-headline text-[32px] font-black uppercase flex items-center gap-6 animate-marquee pr-6 text-pure-black w-max flex-1">
-            <span>TYPESCRIPT</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>JAVASCRIPT</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>NEXT JS</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>REACT</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>TAILWIND</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>NODE.JS</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>NEST JS</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>LARAVEL</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>PHP</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>FLUTTER</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>DOCKER</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
+            {skillsWithStyles.map((skill, index) => (
+              <span key={`mobile-${skill.id}-${index}`} className="flex items-center gap-6">
+                <span>{skill.title}</span>
+                <span className="material-symbols-outlined text-[32px] font-black">
+                  asterisk
+                </span>
+              </span>
+            ))}
             {/* Duplicate for seamless loop */}
-            <span>TYPESCRIPT</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>JAVASCRIPT</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>NEXT JS</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>REACT</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>TAILWIND</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>NODE.JS</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>NEST JS</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>LARAVEL</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>PHP</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>FLUTTER</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
-            <span>DOCKER</span>{" "}
-            <span className="material-symbols-outlined text-[32px] font-black">
-              asterisk
-            </span>
+            {skillsWithStyles.map((skill, index) => (
+              <span key={`mobile-dup-${skill.id}-${index}`} className="flex items-center gap-6">
+                <span>{skill.title}</span>
+                <span className="material-symbols-outlined text-[32px] font-black">
+                  asterisk
+                </span>
+              </span>
+            ))}
           </div>
         </div>
 
@@ -209,14 +146,28 @@ export default function Skills() {
         <div className="hidden md:flex w-max animate-marquee">
           {/* Group 1 */}
           <div className="flex gap-2 sm:gap-3 md:gap-4 lg:gap-6 shrink-0 pr-2 sm:pr-3 md:pr-4 lg:pr-6">
-            {skills.map((skill) => (
-              <SkillCard key={`g1-${skill.name}`} {...skill} />
+            {skillsWithStyles.map((skill) => (
+              <SkillCard
+                key={`g1-${skill.id}`}
+                icon={skill.icon}
+                name={skill.title}
+                bg={skill.bg}
+                text={skill.text}
+                rotate={skill.rotate}
+              />
             ))}
           </div>
           {/* Group 2 (duplicate for infinite loop) */}
           <div className="flex gap-2 sm:gap-3 md:gap-4 lg:gap-6 shrink-0 pr-2 sm:pr-3 md:pr-4 lg:pr-6">
-            {skills.map((skill) => (
-              <SkillCard key={`g2-${skill.name}`} {...skill} />
+            {skillsWithStyles.map((skill) => (
+              <SkillCard
+                key={`g2-${skill.id}`}
+                icon={skill.icon}
+                name={skill.title}
+                bg={skill.bg}
+                text={skill.text}
+                rotate={skill.rotate}
+              />
             ))}
           </div>
         </div>
