@@ -1,31 +1,54 @@
-const projects = [
-  {
-    windowTitle: "cyber_dash.zip",
-    imageBg: "bg-neon-yellow",
-    imageSrc:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuB6PA1Tb54bm-pmCGq3MVcP011j5jBAFIvguCJD-_edXTCR4RVj2-vA6LVmTSkDa5s0tVCzv7uDjqfWYpwmr7zm0J8q1SCC30tU_-mEBIx_-8BBaKEzFunPtRDRerjhtvw2oOQkTY8pH9SEvjvF7iYjbeF6Z7W65wM1FA01HfyKBdLT_gCnIfyThAN3e-ekmuU4_nPjDPBK67SjxkJnPsaVrxGD0W_smpAjIhmsvfCi_snizEgY49whabN9EiWSGmNSr3FI0gm81NE",
-    imageAlt: "Code on screen",
-    tags: ["React", "Three.js"],
-    title: "Cyber-Dash",
-    description:
-      "A high-octane analytics dashboard built for speed and visual impact.",
-    offset: false,
-  },
-  {
-    windowTitle: "neo-poster.png",
-    imageBg: "bg-neon-pink",
-    imageSrc:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCUqrvQz5-XAA6LbX27llrCzljn3MbmWwpwYIhl_9KtQYH7uOXTiOxj4p1tP0KxOMCBxEXFzq9MBv-vQgsPSL6cmPbIzE-p_Ht7zrPZxodjLsIOC13XG8pKhpFmeUJ9qnH4b_3pUMAiYb1bfrAqac2-tZKlT9KcYz69CQeG37v2w1asyhpAVO7Vxk-EQcxPM6HfIHXwZdfyte8J71WA-TqVsUbvB_33qu3JrF1xYk21z5ZDmobT31ANA5zWr1ImowYwnsU2WLK9AbI",
-    imageAlt: "Mobile app design",
-    tags: ["React Native", "Stripe"],
-    title: "Neo-Poster",
-    description:
-      "Generative typography posters, exported from a challenging traditional art and layouts.",
-    offset: true,
-  },
-];
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  link: string | null;
+  image: string | null;
+  technologies: string[];
+}
+
+const windowTitles = ["cyber_dash.zip", "neo-poster.png", "grid_ops.exe", "pulse_wave.tar"];
+const imageBgs = ["bg-neon-yellow", "bg-neon-pink", "bg-neon-blue", "bg-white"];
 
 export default function Projects() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch("/api/projects");
+        if (response.ok) {
+          const data = await response.json();
+          setProjects(data);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    if (!activeProject) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [activeProject]);
+
   return (
     <section
       id="projects"
@@ -45,62 +68,156 @@ export default function Projects() {
         </svg>
       </div>
 
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-16 max-w-sm md:max-w-none mx-auto md:mx-0">
-        {projects.map((project) => (
+      {isLoading ? (
+        <p className="font-mono font-bold text-on-surface-variant text-center py-12">
+          Loading...
+        </p>
+      ) : projects.length === 0 ? (
+        <p className="font-mono font-bold text-on-surface-variant text-center py-12">
+          No projects yet.
+        </p>
+      ) : (
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-16 max-w-sm md:max-w-none mx-auto md:mx-0">
+          {projects.map((project, index) => {
+            const offset = index % 2 === 1;
+            const windowTitle = windowTitles[index % windowTitles.length];
+            const imageBg = imageBgs[index % imageBgs.length];
+
+            return (
+              <div
+                key={project.id}
+                className={`bg-white brutal-border brutal-shadow flex flex-col group ${
+                  offset ? "md:mt-12 lg:mt-16" : ""
+                }`}
+              >
+                <div className="computer-window-header">
+                  <div className="window-dot dot-red"></div>
+                  <div className="window-dot dot-yellow"></div>
+                  <div className="window-dot dot-green"></div>
+                  <span className="font-mono font-bold text-white text-[10px] sm:text-xs ml-3 sm:ml-4">
+                    {windowTitle}
+                  </span>
+                </div>
+                <div
+                  className={`p-2 sm:p-3 md:p-4 border-b-4 border-pure-black ${imageBg}`}
+                >
+                  {project.image ? (
+                    <div className="relative w-full h-32 sm:h-40 md:h-48 lg:h-64 brutal-border overflow-hidden bg-white">
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full h-32 sm:h-40 md:h-48 lg:h-64 brutal-border bg-white/50 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-4xl sm:text-5xl md:text-6xl text-on-surface-variant">
+                        image
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col gap-2 sm:gap-3 md:gap-4 bg-white">
+                  <div className="flex gap-1.5 sm:gap-2 flex-wrap mb-1">
+                    {project.technologies.slice(0, 5).map((tag) => (
+                      <span
+                        key={tag}
+                        className="font-mono font-bold text-[10px] sm:text-xs uppercase bg-surface-container-highest px-1.5 sm:px-2 py-0.5 sm:py-1 brutal-border"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {project.technologies.length > 5 && (
+                      <span className="font-mono font-bold text-[10px] sm:text-xs uppercase bg-pure-black text-white px-1.5 sm:px-2 py-0.5 sm:py-1 brutal-border">
+                        +{project.technologies.length - 5}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-headline text-lg sm:text-xl md:text-2xl lg:text-[32px] font-black leading-[110%] uppercase group-hover:text-neon-blue transition-colors">
+                    {project.title}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setActiveProject(project)}
+                    className="mt-1 sm:mt-2 font-mono font-bold text-xs sm:text-sm md:text-base uppercase flex items-center gap-1.5 sm:gap-2 w-max bg-neon-yellow brutal-border px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-neon-pink hover:text-white transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm sm:text-base md:text-xl">
+                      description
+                    </span>
+                    View Description
+                  </button>
+                  {project.link && (
+                    <a
+                      className="mt-1 sm:mt-2 md:mt-4 font-mono font-bold text-xs sm:text-sm md:text-base uppercase flex items-center gap-1.5 sm:gap-2 w-max border-b-4 border-pure-black pb-0.5 sm:pb-1 hover:text-neon-pink hover:border-neon-pink transition-colors"
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Case Study{" "}
+                      <span className="material-symbols-outlined text-sm sm:text-base md:text-xl">
+                        arrow_forward
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {activeProject && (
+        <div
+          className="fixed inset-0 bg-pure-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 overflow-y-auto"
+          onClick={() => setActiveProject(null)}
+        >
           <div
-            key={project.title}
-            className={`bg-white brutal-border brutal-shadow flex flex-col group ${
-              project.offset ? "md:mt-12 lg:mt-16" : ""
-            }`}
+            className="bg-white brutal-border brutal-shadow w-full max-w-2xl my-auto"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="computer-window-header">
+            <div className="computer-window-header flex items-center">
               <div className="window-dot dot-red"></div>
               <div className="window-dot dot-yellow"></div>
               <div className="window-dot dot-green"></div>
-              <span className="font-mono font-bold text-white text-[10px] sm:text-xs ml-3 sm:ml-4">
-                {project.windowTitle}
+              <span className="font-mono font-bold text-white text-[10px] sm:text-xs ml-3 sm:ml-4 flex-1 truncate">
+                {activeProject.title}.txt
               </span>
-            </div>
-            <div
-              className={`p-2 sm:p-3 md:p-4 border-b-4 border-pure-black ${project.imageBg}`}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt={project.imageAlt}
-                className="w-full h-32 sm:h-40 md:h-48 lg:h-64 object-cover brutal-border"
-                src={project.imageSrc}
-              />
-            </div>
-            <div className="p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col gap-2 sm:gap-3 md:gap-4 bg-white">
-              <div className="flex gap-1.5 sm:gap-2 flex-wrap mb-1">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="font-mono font-bold text-[10px] sm:text-xs uppercase bg-surface-container-highest px-1.5 sm:px-2 py-0.5 sm:py-1 brutal-border"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <h3 className="font-headline text-lg sm:text-xl md:text-2xl lg:text-[32px] font-black leading-[110%] uppercase group-hover:text-neon-blue transition-colors">
-                {project.title}
-              </h3>
-              <p className="font-body text-xs sm:text-sm md:text-base text-on-surface-variant">
-                {project.description}
-              </p>
-              <a
-                className="mt-1 sm:mt-2 md:mt-4 font-mono font-bold text-xs sm:text-sm md:text-base uppercase flex items-center gap-1.5 sm:gap-2 w-max border-b-4 border-pure-black pb-0.5 sm:pb-1 hover:text-neon-pink hover:border-neon-pink transition-colors"
-                href="#"
+              <button
+                type="button"
+                onClick={() => setActiveProject(null)}
+                aria-label="Close"
+                className="ml-2 mr-2 w-7 h-7 bg-neon-pink border-2 border-white flex items-center justify-center hover:bg-white hover:text-pure-black transition-colors"
               >
-                View Case Study{" "}
-                <span className="material-symbols-outlined text-sm sm:text-base md:text-xl">
-                  arrow_forward
+                <span className="material-symbols-outlined text-white text-[18px] leading-none">
+                  close
                 </span>
-              </a>
+              </button>
+            </div>
+            <div className="p-4 sm:p-6 md:p-8 flex flex-col gap-4">
+              <h3 className="font-headline text-xl sm:text-2xl md:text-3xl font-black uppercase leading-[110%]">
+                {activeProject.title}
+              </h3>
+              {activeProject.technologies.length > 0 && (
+                <div className="flex gap-1.5 sm:gap-2 flex-wrap">
+                  {activeProject.technologies.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono font-bold text-[10px] sm:text-xs uppercase bg-surface-container-highest px-1.5 sm:px-2 py-0.5 sm:py-1 brutal-border"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <p className="font-body text-sm sm:text-base text-on-surface-variant whitespace-pre-line">
+                {activeProject.description}
+              </p>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </section>
   );
 }
