@@ -2,8 +2,14 @@
 
 import { useState, useEffect } from "react";
 
+interface Resume {
+  url: string;
+  filename: string;
+}
+
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("");
+  const [resume, setResume] = useState<Resume | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,12 +37,35 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        const response = await fetch("/api/resume");
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.url) {
+            setResume({ url: data.url, filename: data.filename });
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching resume:", error);
+      }
+    };
+
+    fetchResume();
+  }, []);
+
   const getLinkClass = (href: string) => {
     const id = href.replace("#", "");
     if (activeSection === id) {
       return "text-secondary underline decoration-4 underline-offset-8 transition-all";
     }
     return "text-on-surface hover:translate-x-1 hover:translate-y-1 hover:shadow-neubrutalism-hover transition-all";
+  };
+
+  const handleView = () => {
+    if (!resume) return;
+    window.open(resume.url, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -61,10 +90,16 @@ export default function Navbar() {
         </a>
       </div>
 
-      <button className="bg-primary-container text-pure-black font-mono font-bold px-4 py-2 lg:px-6 lg:py-3 brutal-border brutal-shadow flex items-center gap-2 text-xs lg:text-sm uppercase whitespace-nowrap">
-        Download CV
+      <button
+        type="button"
+        onClick={handleView}
+        disabled={!resume}
+        title={resume ? `View ${resume.filename}` : "No CV uploaded yet"}
+        className="bg-primary-container text-pure-black font-mono font-bold px-4 py-2 lg:px-6 lg:py-3 brutal-border brutal-shadow flex items-center gap-2 text-xs lg:text-sm uppercase whitespace-nowrap hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0"
+      >
+        View CV
         <span className="material-symbols-outlined text-sm lg:text-base hidden md:block">
-          download
+          open_in_new
         </span>
       </button>
     </nav>

@@ -22,3 +22,9 @@ const publicBase = (process.env.MINIO_PUBLIC_URL ?? endpoint).replace(/\/$/, "")
 export function publicUrl(key: string) {
   return `${publicBase}/${MINIO_BUCKET}/${key}`;
 }
+
+export function keyFromUrl(url: string): string | null {
+  const prefix = `${publicBase}/${MINIO_BUCKET}/`;
+  if (!url.startsWith(prefix)) return null;
+  return url.slice(prefix.length);
+}

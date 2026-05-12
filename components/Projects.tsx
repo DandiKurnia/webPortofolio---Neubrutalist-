@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Project {
   id: string;
@@ -78,7 +79,7 @@ export default function Projects() {
         </p>
       ) : (
         <div className="flex flex-col md:grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-16 max-w-sm md:max-w-none mx-auto md:mx-0">
-          {projects.map((project, index) => {
+          {projects.slice(0, 2).map((project, index) => {
             const offset = index % 2 === 1;
             const windowTitle = windowTitles[index % windowTitles.length];
             const imageBg = imageBgs[index % imageBgs.length];
@@ -165,6 +166,20 @@ export default function Projects() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {!isLoading && projects.length > 0 && (
+        <div className="mt-10 sm:mt-12 md:mt-16 flex justify-center">
+          <Link
+            href="/projects"
+            className="font-mono font-bold text-sm sm:text-base md:text-lg uppercase flex items-center gap-2 sm:gap-3 bg-neon-blue brutal-border brutal-shadow px-5 py-3 sm:px-6 sm:py-4 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+          >
+            View All Projects
+            <span className="material-symbols-outlined text-base sm:text-lg md:text-xl">
+              arrow_forward
+            </span>
+          </Link>
         </div>
       )}
 

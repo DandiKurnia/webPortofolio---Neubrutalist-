@@ -144,8 +144,23 @@
 }
 
 /* Material Symbols */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: block;
+  src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
+}
 .material-symbols-outlined {
+  font-family: "Material Symbols Outlined", sans-serif;
   font-variation-settings: "FILL" 1;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: bottom; /* or middle, depending on baseline needs */
 }
 
 /* Brutalist Grid Background */

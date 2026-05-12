@@ -38,10 +38,6 @@ export default function RootLayout({
       className={`${montserrat.variable} ${spaceGrotesk.variable} ${spaceMono.variable} antialiased`}
     >
       <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block"
-          rel="stylesheet"
-        />
       </head>
       <body className="min-h-full flex flex-col font-body bg-surface text-pure-black overflow-x-hidden selection:bg-neon-pink selection:text-white">
         <QueryProvider>{children}</QueryProvider>
