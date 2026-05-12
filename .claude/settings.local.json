@@ -30,7 +30,9 @@
       "PowerShell(Get-Process *)",
       "Bash(lsof -ti:3000)",
       "Bash(xargs kill -9)",
-      "PowerShell(Get-NetTCPConnection *)"
+      "PowerShell(Get-NetTCPConnection *)",
+      "Bash(npx tsc *)",
+      "Bash(docker compose *)"
     ]
   }
 }
