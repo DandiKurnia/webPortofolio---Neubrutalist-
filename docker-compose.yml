@@ -52,6 +52,31 @@ services:
       exit 0;
       "
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webportofolio_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/webportofoliov2
+      NODE_ENV: production
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      MINIO_BUCKET: ${MINIO_BUCKET:-projects}
+      # Add your auth secrets here
+      # NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      # NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy && node server.js"
+
 volumes:
   postgres_data:
     driver: local

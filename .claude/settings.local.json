@@ -32,7 +32,8 @@
       "Bash(xargs kill -9)",
       "PowerShell(Get-NetTCPConnection *)",
       "Bash(npx tsc *)",
-      "Bash(docker compose *)"
+      "Bash(docker compose *)",
+      "Bash(xargs grep -l -i \"standalone\")"
     ]
   }
 }
