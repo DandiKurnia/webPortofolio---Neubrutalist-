@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
         hostname: "minio.danbildad.my.id",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "danbildad.web.id",
+        pathname: "/**",
+      },
     ],
   },
 };
