@@ -42,6 +42,7 @@ COPY --from=builder /app/public ./public
 
 # Copy Prisma files for migrations
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/app/generated/prisma ./app/generated/prisma
 
 USER nextjs
