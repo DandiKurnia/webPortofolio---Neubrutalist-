@@ -22,7 +22,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BRUTALFOLIO - Creative Developer Portfolio",
+  title: "DanBilDad - Creative Developer Portfolio",
   description:
     "Building unapologetic digital experiences that break the mold and command attention.",
 };
@@ -37,8 +37,7 @@ export default function RootLayout({
       lang="en"
       className={`${montserrat.variable} ${spaceGrotesk.variable} ${spaceMono.variable} antialiased`}
     >
-      <head>
-      </head>
+      <head></head>
       <body className="min-h-full flex flex-col font-body bg-surface text-pure-black overflow-x-hidden selection:bg-neon-pink selection:text-white">
         <QueryProvider>{children}</QueryProvider>
       </body>

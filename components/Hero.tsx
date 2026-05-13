@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Hero() {
   return (
     <section
@@ -77,11 +79,13 @@ function ContactWindow() {
         </span>
       </div>
       <div className="p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center bg-surface-container-lowest gap-4 md:gap-6">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           alt="Profile Picture"
           className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 brutal-border rounded-full object-cover brutal-shadow-sm"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIKp8twVuUwEOYRUK5nlXI0pEkIG0a9vzkF6cTc6PbBEZ8l1-9SMLe1EtBPqKhnKMN6CxpieVejd4y65Bo9cutrT7IQk_eLIOej5q5E7UkF0o48yAPSU_by9MU__zwqAr37Qs9AVs5KWmmGo8jAdkL7BiccwbXsSYMwU_eTHiyZCN5Hhll3OB4dZoa3kT2QYP-mxJVuJMKm33C8zgafstJKUQ7mTndoMh0cOkZ241ua2wqUwIslUW5BatTJWu0MqoHl-wo4USvhvo"
+          src="/images/profile.png"
+          width={128}
+          height={128}
+          quality={100}
         />
         <div className="text-center">
           <h3 className="font-headline text-base sm:text-lg md:text-xl lg:text-2xl font-black uppercase mb-1 md:mb-2">
