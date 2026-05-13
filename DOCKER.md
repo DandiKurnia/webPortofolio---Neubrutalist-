@@ -25,7 +25,7 @@ The workflow `.github/workflows/docker-publish.yml` automatically:
 - Pushes to GitHub Container Registry (ghcr.io)
 - Tags images with branch name, SHA, and `latest`
 
-**Image location:** `ghcr.io/<your-username>/webportofoliov2v2:latest`
+**Image location:** `ghcr.io/<your-username>/webportofoliov2:latest`
 
 ### Pull and Run on Your Server
 
