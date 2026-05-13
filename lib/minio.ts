@@ -1,8 +1,15 @@
 import { S3Client } from "@aws-sdk/client-s3";
 
 const endpoint = process.env.MINIO_ENDPOINT ?? "http://localhost:9000";
-const accessKeyId = process.env.MINIO_ROOT_USER ?? "minioadmin";
-const secretAccessKey = process.env.MINIO_ROOT_PASSWORD ?? "minioadmin";
+
+const accessKeyId =
+  process.env.MINIO_ACCESS_KEY ?? process.env.MINIO_ROOT_USER ?? "minioadmin";
+
+const secretAccessKey =
+  process.env.MINIO_SECRET_KEY ??
+  process.env.MINIO_ROOT_PASSWORD ??
+  "minioadmin";
+
 const region = process.env.MINIO_REGION ?? "us-east-1";
 
 export const s3 = new S3Client({
@@ -17,7 +24,11 @@ export const s3 = new S3Client({
 
 export const MINIO_BUCKET = process.env.MINIO_BUCKET ?? "projects";
 
-const publicBase = (process.env.MINIO_PUBLIC_URL ?? endpoint).replace(/\/$/, "");
+const publicBase = (
+  process.env.MINIO_PUBLIC_URL ??
+  process.env.MINIO_ENDPOINT ??
+  endpoint
+).replace(/\/$/, "");
 
 export function publicUrl(key: string) {
   return `${publicBase}/${MINIO_BUCKET}/${key}`;
