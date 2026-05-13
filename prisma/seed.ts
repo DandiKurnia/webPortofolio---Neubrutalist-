@@ -1,7 +1,18 @@
+import "dotenv/config";
 import { PrismaClient } from "../app/generated/prisma";
-
-const prisma = new PrismaClient();
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 import { hash } from "bcryptjs";
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+const adapter = new PrismaPg(pool);
+
+const prisma = new PrismaClient({
+  adapter,
+});
 
 async function main() {
   const hashedPassword = await hash("dandi3105", 10);
@@ -18,8 +29,7 @@ async function main() {
 
   console.log("Admin user created:", admin);
 
-  // Seed certifications
-  const certifications = await prisma.certification.createMany({
+  await prisma.certification.createMany({
     data: [
       {
         title: "Data Privacy Fundamentals",
@@ -40,12 +50,12 @@ async function main() {
         years: "2023",
       },
     ],
+    skipDuplicates: true,
   });
 
-  console.log("Certifications created:", certifications);
+  console.log("Certifications seeded");
 
-  // Seed skills
-  const skills = await prisma.skill.createMany({
+  await prisma.skill.createMany({
     data: [
       {
         title: "React.js",
@@ -68,9 +78,10 @@ async function main() {
         icon: "deployed_code",
       },
     ],
+    skipDuplicates: true,
   });
 
-  console.log("Skills created:", skills);
+  console.log("Skills seeded");
 }
 
 main()
@@ -80,4 +91,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });
